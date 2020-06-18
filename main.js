@@ -1,10 +1,10 @@
 'use strict';
 
 class Hamburger {
-  constructor(size, stuff, sauce) {
+  constructor(size, stuff, sauces = []) {
     this.size = size;
     this.stuff = stuff;
-    this.sauce = sauce;
+    this.sauces = sauces;
   }
 
   static SIZE_SMALL = { name: 'SIZE_SMALL', price: 50, calories: 20 };
@@ -21,22 +21,22 @@ class Hamburger {
 
   static TOPPING_MAYO = { name: 'TOPPING_MAYO', price: 20, calories: 5 };
 
-  addTopping(sauce) {
-    this.sauce = sauce;
+  addToppings(...sauces) {
+    this.sauces.push(...sauces);
   }
 
   calculateCalories() {
     const calories = this.size.calories + this.stuff.calories;
-    if (this.sauce !== undefined) {
-      return calories + this.sauce.calories;
+    if (this.sauces.length) {
+      return calories + this.sauces.reduce((acc, sause) => acc + sause.calories, 0);
     }
     return calories;
   }
 
   calculatePrice() {
     const price = this.size.price + this.stuff.price;
-    if (this.sauce !== undefined) {
-      return price + this.sauce.price;
+    if (this.sauces.length) {
+      return price + this.sauces.reduce((acc, sause) => acc + sause.price, 0);
     }
     return price;
   }
@@ -44,9 +44,8 @@ class Hamburger {
 
 const hamburger = new Hamburger(Hamburger.SIZE_SMALL, Hamburger.STUFFING_CHEESE);
 
-hamburger.addTopping(Hamburger.TOPPING_MAYO);
+// Можно добавить один топинг или сразу несколько
+hamburger.addToppings(Hamburger.TOPPING_SPICE, Hamburger.TOPPING_MAYO);
+
 console.log(`Цена ${hamburger.calculatePrice()}`);
 console.log(`Калории ${hamburger.calculateCalories()}`);
-
-hamburger.addTopping(Hamburger.TOPPING_SPICE);
-console.log(`Цена c приправой ${hamburger.calculatePrice()}`);
